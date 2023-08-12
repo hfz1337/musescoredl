@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import sys
 import os
-import re
 import requests
 import tempfile
 from PIL import Image
@@ -16,10 +15,13 @@ if len(sys.argv) < 2:
     sys.exit(0)
 
 
-def get_score_title(url: str) -> str:
+def get_score_title_and_id(url: str) -> str:
     response = requests.get(url=url)
     parser = BeautifulSoup(response.text, "html.parser")
-    return parser.find("meta", attrs={"property": "og:title"})["content"].strip(" .")
+    return (
+        parser.find("meta", attrs={"property": "og:title"})["content"].strip(" ."),
+        parser.find("meta", attrs={"property": "og:url"})["content"].split("/")[-1],
+    )
 
 
 def get_score_id(url: str) -> str:
@@ -29,8 +31,7 @@ def get_score_id(url: str) -> str:
 # https://musescore.com/static/public/build/musescore_es6/202308/2946.b939fe57e9c71db1cf2d0dbf4aceab6d.js
 HEADERS = {"Authorization": "8c022bdef45341074ce876ae57a48f64b86cdcf5"}
 BASE_URL = "https://musescore.com/api/jmuse"
-SCORE_TITLE = get_score_title(sys.argv[1])
-SCORE_ID = get_score_id(sys.argv[1])
+SCORE_TITLE, SCORE_ID = get_score_title_and_id(sys.argv[1])
 DIRNAME = "scores"
 OUTFILE = f"{DIRNAME}/{SCORE_TITLE}.pdf"
 
