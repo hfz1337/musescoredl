@@ -1,5 +1,5 @@
 # MuseScoreDL
-Download music sheets from [MuseScore](https://musescore.com/) and save them as PDF.
+Download a sheet music from [MuseScore](https://musescore.com/) and save it as PDF.
 
 ## Installation
 ```bash
